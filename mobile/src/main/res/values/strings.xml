@@ -11,22 +11,5 @@
     <string name="title_activity_heart_rate">HeartRateActivity</string>
     <string name="title_activity_activity_segment">ActivitySegmentActivity</string>
 
-    <!-- April UI strings, should be stanrdadized -->
-    <string name="welcome_to_insight">Welcome to insight</string>
-    <string name="stringIntro1"> Insight tracks your activities and interaction with your watch, and visualizes them on your watch screen. \n aaaaaaaaaaaaaaaaaa \n aaaaaaaaaaaaaaaa \n aaaaaaaaaaaaaa </string>
-    <string name="stringIntro2"> Please enable your notification, and login with your Google. Insight uses google play services to track your activities. Therefore, you need to install it \n aaaaaaaaaaaaaaa \n aaaaaaaaaaaaa \n aaaaaaaaaaaaaaa </string>
-    <string name="i_read_and_accept">I read and accept</string>
-    <string name="stringTerms"><u>terms and conditions.</u></string>
-    <string name="beta">B\nE\nT\nA</string>
-    <string name="title_activity_main_activity2">MyActivity2</string>
-    <string name="Next">Next</string>
-    <string name="GooglePSC">  Google Play Services: Connected  </string>
-    <string name="NotiAccG">  Notification Access: Granted  </string>
-    <string name="PredictionD">  Prediction: Disabled  </string>
-    <string name="Help"> Help </string>
-    <string name="Bug_Report">  Bug Report  </string>
-    <string name="About"> About </string>
-    <string name="terms_MSG">Terms and Conditions:\nTerm 1 \nTerm 2 \nTerm 3 \n.........................................."" </string>
-    <string name="Continue">Continue... </string>
 
 </resources>
