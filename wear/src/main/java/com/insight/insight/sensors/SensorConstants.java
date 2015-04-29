@@ -1,6 +1,9 @@
 package com.insight.insight.sensors;
 
-/* Created by CM */
+/* Created by CM
+* Modified by MN
+*/
+
 //TODO 4m Reza: Move this to Common.Settings class 
 public final class SensorConstants {
 
@@ -18,6 +21,8 @@ public final class SensorConstants {
     public static long WALKDETECTION_INTERVAL = 30000L; //30 seconds
 
     public static long LIGHT_SENSOR_INTERVAL = 600000L; // 10 minutes
+
+    public static long LIGHT_SENSOR_SAMPLE_INTERVAL = 30000L; // 30 Seconds
 
     public static int LIGHT_SAMPLE_AMNT = 3;
 }

@@ -20,10 +20,11 @@ import java.util.Date;
 
 /**
  * Created by CM
+ * Modified by MN
  */
 
 /**
- * Class will take 5 lux readings every SensorConstant.LIGHT_SENSOR_INTERVAL
+ * Class will take 3 lux readings every SensorConstant.LIGHT_SENSOR_INTERVAL
  * and write to file
  */
 
@@ -54,33 +55,30 @@ public class LightSensor extends Service implements SensorEventListener {
         mSA_lightBuffer = new DataAcquisitor(this, "SA/" + Setting.dataFilename_LightSensor);
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mLight = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+        HandlerThread ht = new HandlerThread("LightThread", android.os.Process.THREAD_PRIORITY_BACKGROUND);
+        ht.start();
+        mHandler = new Handler(ht.getLooper());
+        mHandler.post(activateLightListener);
         Log.d(LOG_TAG, "Light sensor started");
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent != null) {
-            //SensorDelayNormal is 200,000 ms
-            HandlerThread ht = new HandlerThread("LightThread", android.os.Process.THREAD_PRIORITY_BACKGROUND);
-            ht.start();
-            mHandler = new Handler(ht.getLooper());
-            mHandler.post(activateLightListener);
-
-        }
-        return START_STICKY;
-    }
-
-    @Override
+     @Override
     public void onSensorChanged(SensorEvent event) {
-        //Light sensor returns one value
+        //Light sensor returns one value as LUX
+        //taking 3 sample on every <SensorConstants.LIGHT_SENSOR_SAMPLE_INTERVAL> Milliseconds
+        //and then calculate the average and insert to buffer
+        //and sleep for <SensorConstants.LIGHT_SENSOR_INTERVAL> Milliseconds
 
-        //After taking 3 readings, unregister the listener
-        //Call handler again in SensorConstant.Interval
+        mSensorManager.unregisterListener(this);
+        float lux = event.values[0];
+        totalSum += lux;
+        count++;
+        Log.d(LOG_TAG, "Sample count:" + count + ", lux:" + lux + ", total:" + totalSum);
+
         if (count >= SensorConstants.LIGHT_SAMPLE_AMNT) {
-            mSensorManager.unregisterListener(this);
-
             Date date = new Date();
             float avg = totalSum / count;
+
             //Encode the lux value and date
             String encoded = JSONUtil.encodeLight(avg, date);
             Log.d(LOG_TAG, encoded);
@@ -98,9 +96,8 @@ public class LightSensor extends Service implements SensorEventListener {
             mHandler.postDelayed(activateLightListener, SensorConstants.LIGHT_SENSOR_INTERVAL);
 
         } else {
-            float lux = event.values[0];
-            totalSum += lux;
-            count++;
+            mHandler.postDelayed(activateLightListener, SensorConstants.LIGHT_SENSOR_SAMPLE_INTERVAL);
+
         }
     }
 
