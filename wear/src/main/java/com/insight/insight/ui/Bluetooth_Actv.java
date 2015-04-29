@@ -48,7 +48,7 @@ public class Bluetooth_Actv extends Activity {
         TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
         tvTitle.setText(R.string.title_activity_wbluetooth);
 
-        lastDataFilesList = ioManager.getLastFilesInDir(Setting.dataFilename_Bluetooth, Setting.linksButtonCount);
+        lastDataFilesList = ioManager.getLastFilesInDir(Setting.dataFolderName_Bluetooth, Setting.linksButtonCount);
         if (lastDataFilesList != null && lastDataFilesList.length > 0) {
             Date date = ioManager.parseDataFilename2Date(lastDataFilesList[0].getName());
             displayDataList(date);
@@ -106,7 +106,7 @@ public class Bluetooth_Actv extends Activity {
 
         try {
             String sCurrentLine;
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(ioManager.getDataFolderFullPath(Setting.dataFilename_Bluetooth) + Setting.filenameFormat.format(date) + ".txt")));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(ioManager.getDataFolderFullPath(Setting.dataFolderName_Bluetooth) + Setting.filenameFormat.format(date) + ".txt")));
             try {
                 while ((sCurrentLine = br.readLine()) != null) {
                     Object[] decodedRow = jsonUtil.decodeBT(sCurrentLine); // [0]:Date, [1]:State

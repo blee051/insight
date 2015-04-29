@@ -114,7 +114,7 @@ public class ActivityDataHelper {
             long diffInMillis = lastUpdateDate.getTime() - s.getDate().getTime();
             long absDiff = Math.abs(diffInMillis);
             Log.d(LOG_TAG, "Diff in millis:" + absDiff);
-            if (absDiff > SensorConstants.WALKDETECTION_INTERVAL) {
+            if (absDiff > Setting.WALKDETECTION_INTERVAL) {
                 return false;
             } else
                 return true;

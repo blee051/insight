@@ -84,7 +84,7 @@ public class HeartRate_Actv extends Activity {
         tvTitle.setText(R.string.title_activity_wheartrate);
 
 
-        lastDataFilesList = ioManager.getLastFilesInDir(Setting.dataFilename_HeartRate, Setting.linksButtonCount);
+        lastDataFilesList = ioManager.getLastFilesInDir(Setting.dataFolderName_HeartRate, Setting.linksButtonCount);
         //lastDataFilesList = new File[]{new File("sdcard/2-7-2015.txt"), new File("sdcard/2-6-2015.txt")}; // reading from temp file
         if (lastDataFilesList != null && lastDataFilesList.length > 0) {
             Date date = ioManager.parseDataFilename2Date(lastDataFilesList[0].getName());//
@@ -195,7 +195,7 @@ public class HeartRate_Actv extends Activity {
         // start filling the series
         try {
             String sCurrentLine;
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(ioManager.getDataFolderFullPath(Setting.dataFilename_HeartRate) + Setting.filenameFormat.format(date) + ".txt")));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(ioManager.getDataFolderFullPath(Setting.dataFolderName_HeartRate) + Setting.filenameFormat.format(date) + ".txt")));
             try {
                 ArrayList<HeartRateDataRecord> dataRecords = new ArrayList<>();
                 while ((sCurrentLine = br.readLine()) != null) {

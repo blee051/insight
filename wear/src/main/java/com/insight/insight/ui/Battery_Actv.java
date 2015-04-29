@@ -72,7 +72,7 @@ public class Battery_Actv extends Activity {
         tvTitle.setText(R.string.title_activity_wbattery);
 
 
-        lastDataFilesList = ioManager.getLastFilesInDir(Setting.dataFilename_Battery, Setting.linksButtonCount);
+        lastDataFilesList = ioManager.getLastFilesInDir(Setting.dataFolderName_Battery, Setting.linksButtonCount);
         if (lastDataFilesList != null && lastDataFilesList.length > 0) {
             Date date = ioManager.parseDataFilename2Date(lastDataFilesList[0].getName());//
             displayData(date);
@@ -173,7 +173,7 @@ public class Battery_Actv extends Activity {
         // start filling the series
         try {
             String sCurrentLine;
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(ioManager.getDataFolderFullPath(Setting.dataFilename_Battery) + Setting.filenameFormat.format(date) + ".txt")));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(ioManager.getDataFolderFullPath(Setting.dataFolderName_Battery) + Setting.filenameFormat.format(date) + ".txt")));
             try {
                 ArrayList<BatteryDataRecord> dataRecords = new ArrayList<>();
                 while ((sCurrentLine = br.readLine()) != null) {

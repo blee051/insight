@@ -51,8 +51,8 @@ public class LightSensor extends Service implements SensorEventListener {
     public void onCreate() {
         count = 0;
         totalSum = 0f;
-        mDataBuffer = new DataAcquisitor(this, Setting.dataFilename_LightSensor);
-        mSA_lightBuffer = new DataAcquisitor(this, "SA/" + Setting.dataFilename_LightSensor);
+        mDataBuffer = new DataAcquisitor(this, Setting.dataFolderName_LightSensor);
+        mSA_lightBuffer = new DataAcquisitor(this, "SA/" + Setting.dataFolderName_LightSensor);
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mLight = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         HandlerThread ht = new HandlerThread("LightThread", android.os.Process.THREAD_PRIORITY_BACKGROUND);
@@ -75,7 +75,7 @@ public class LightSensor extends Service implements SensorEventListener {
         count++;
         Log.d(LOG_TAG, "Sample count:" + count + ", lux:" + lux + ", total:" + totalSum);
 
-        if (count >= SensorConstants.LIGHT_SAMPLE_AMNT) {
+        if (count >= Setting.LIGHT_SAMPLE_AMNT) {
             Date date = new Date();
             float avg = totalSum / count;
 
@@ -93,10 +93,10 @@ public class LightSensor extends Service implements SensorEventListener {
             totalSum = 0;
             count = 0;
 
-            mHandler.postDelayed(activateLightListener, SensorConstants.LIGHT_SENSOR_INTERVAL);
+            mHandler.postDelayed(activateLightListener, Setting.LIGHT_SENSOR_INTERVAL);
 
         } else {
-            mHandler.postDelayed(activateLightListener, SensorConstants.LIGHT_SENSOR_SAMPLE_INTERVAL);
+            mHandler.postDelayed(activateLightListener, Setting.LIGHT_SENSOR_SAMPLE_INTERVAL);
 
         }
     }

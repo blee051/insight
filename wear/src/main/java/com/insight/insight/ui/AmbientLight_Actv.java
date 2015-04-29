@@ -73,7 +73,7 @@ public class AmbientLight_Actv extends Activity {
         TextView tvTitle = (TextView) findViewById(R.id.tvTitleChart);
         tvTitle.setText(R.string.title_activity_wambientlight);
 
-        lastDataFilesList = ioManager.getLastFilesInDir(Setting.dataFilename_LightSensor, Setting.linksButtonCount);
+        lastDataFilesList = ioManager.getLastFilesInDir(Setting.dataFolderName_LightSensor, Setting.linksButtonCount);
         if (lastDataFilesList != null && lastDataFilesList.length > 0) {
             Date date = ioManager.parseDataFilename2Date(lastDataFilesList[0].getName());//
             displayData(date);
@@ -174,7 +174,7 @@ public class AmbientLight_Actv extends Activity {
         // start filling the series
         try {
             String sCurrentLine;
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(ioManager.getDataFolderFullPath(Setting.dataFilename_LightSensor) + Setting.filenameFormat.format(date) + ".txt")));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(ioManager.getDataFolderFullPath(Setting.dataFolderName_LightSensor) + Setting.filenameFormat.format(date) + ".txt")));
             try {
                 ArrayList<LightDataRecord> dataRecords = new ArrayList<>();
                 while ((sCurrentLine = br.readLine()) != null) {

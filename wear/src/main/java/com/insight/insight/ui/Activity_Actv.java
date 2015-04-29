@@ -82,7 +82,7 @@ public class Activity_Actv extends Activity {
         tvTitle.setText(R.string.title_activity_wactivity);
 
 
-        lastDataFilesList = ioManager.getLastFilesInDir(Setting.dataFilename_ActivFit, Setting.linksButtonCount);
+        lastDataFilesList = ioManager.getLastFilesInDir(Setting.dataFolderName_ActivFit, Setting.linksButtonCount);
         //lastDataFilesList = new File[]{new File("sdcard/2-9-2015.txt"), new File("sdcard/2-8-2015.txt")}; // reading from temp file
         if (lastDataFilesList != null && lastDataFilesList.length > 0) {
             Date date = ioManager.parseDataFilename2Date(lastDataFilesList[0].getName());//
@@ -110,7 +110,7 @@ public class Activity_Actv extends Activity {
         HashMap<String, ArrayList<ActivityDataRecord>> dataMapList = new HashMap<>();
         try {
             String sCurrentLine;
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(ioManager.getDataFolderFullPath(Setting.dataFilename_ActivFit) + Setting.filenameFormat.format(date) + ".txt")));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(ioManager.getDataFolderFullPath(Setting.dataFolderName_ActivFit) + Setting.filenameFormat.format(date) + ".txt")));
             try {
                 while ((sCurrentLine = br.readLine()) != null) {
                     Object[] decodedRow = jsonUtil.decodeActivityFit(sCurrentLine);// [0]:startTime, [1]:endTime, [2]:activityType, [3]:duration

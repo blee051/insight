@@ -48,7 +48,7 @@ public class Notifications_Actv extends Activity {
         TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
         tvTitle.setText(R.string.title_activity_wnotifications);
 
-        lastDataFilesList = ioManager.getLastFilesInDir(Setting.dataFilename_Notifications, Setting.linksButtonCount);
+        lastDataFilesList = ioManager.getLastFilesInDir(Setting.dataFolderName_Notifications, Setting.linksButtonCount);
         if (lastDataFilesList != null && lastDataFilesList.length > 0) {
             Date date = ioManager.parseDataFilename2Date(lastDataFilesList[0].getName());
             displayDataList(date);
@@ -112,7 +112,7 @@ public class Notifications_Actv extends Activity {
         List<RowData> rDatas = new ArrayList<RowData>();
         try {
             String sCurrentLine;
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(ioManager.getDataFolderFullPath(Setting.dataFilename_Notifications) + Setting.filenameFormat.format(date) + ".txt")));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(ioManager.getDataFolderFullPath(Setting.dataFolderName_Notifications) + Setting.filenameFormat.format(date) + ".txt")));
             try {
                 while ((sCurrentLine = br.readLine()) != null) {
                     Object[] decodedRow = jsonUtil.decodeNotification(sCurrentLine); // [0]:date, [1]:pkg name, [2]:title, [3]:flags, [4]:category
