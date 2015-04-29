@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -203,10 +204,20 @@ public class AmbientLight_Actv extends Activity {
                     }
                 }
 
-
+                //for have all 24 hours on graph, we add two extra record with 0 value to records
+                //
+                //
+                //
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(date);
+                cal.set(Calendar.HOUR_OF_DAY, 0);   // 00:00:00
+                series1.add(cal.getTime(), 0);
+                cal.add(Calendar.HOUR, 12);          // 12:00:00
+                series1.add(cal.getTime(), 0);
+                cal.add(Calendar.MILLISECOND, 43199999); // 23:59:59
+                series1.add(cal.getTime(), 0);
                 for (LightDataRecord record : dataRecords) {
                     series1.add(record.timeStamp, getNormalizedLux(record.lux));
-                    //Log.i(">>", "ts:" + record.timeStamp.toString() + ", tsh:" + record.timeStampHour + ", avglux:" + record.lux / record.density + ", dns:" + record.density);
                 }
 
 
@@ -234,23 +245,21 @@ public class AmbientLight_Actv extends Activity {
         XYMultipleSeriesRenderer mRenderer = new XYMultipleSeriesRenderer();
         mRenderer.addSeriesRenderer(renderer1);
         mRenderer.setYAxisMin(0);
-        mRenderer.setYAxisMax(18);
+        mRenderer.setYAxisMax(19);
         mRenderer.setYLabelsAlign(Paint.Align.RIGHT);
         mRenderer.setYLabelsPadding(5.0f);
         mRenderer.setYLabels(0);
 
         mRenderer.addYTextLabel(0, "Dark");
-        mRenderer.addYTextLabel(6, "Less\nbright");
-        mRenderer.addYTextLabel(10, "Bright");
-        mRenderer.addYTextLabel(16, "Very\nbright");
+        mRenderer.addYTextLabel(5, "Less\nbright");
+        mRenderer.addYTextLabel(11, "Bright");
+        mRenderer.addYTextLabel(17, "Very\nbright");
 
-        double minXValue = series1.getMinX();
-        double midXValue = series1.getX(series1.getItemCount() / 2);
-        double maxXValue = series1.getMaxX();
-        mRenderer.addXTextLabel(minXValue, new SimpleDateFormat("HH").format(minXValue));
-        mRenderer.addXTextLabel(midXValue, new SimpleDateFormat("HH").format(midXValue));
-        mRenderer.addXTextLabel(maxXValue, new SimpleDateFormat("HH").format(maxXValue));
+        mRenderer.addXTextLabel(series1.getX(0), "00:00");
+        mRenderer.addXTextLabel(series1.getX(1), "12:00");
+        mRenderer.addXTextLabel(series1.getX(2), "23:59");
 
+        mRenderer.setBarWidth(1.2f);
         mRenderer.setXLabels(0);
         mRenderer.setXLabelsAlign(Paint.Align.CENTER);
         mRenderer.setMarginsColor(Color.argb(0x00, 0xff, 0x00, 0x00)); // transparent margins
@@ -279,27 +288,35 @@ public class AmbientLight_Actv extends Activity {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, x, getResources().getDisplayMetrics());
     }
 
-    public int getNormalizedLux(float lux) {
-        int result = 0;
-        if (lux < 30) result = 0;//             dark
-        else if (lux < 200) result = 1;//       less bright
-        else if (lux < 400) result = 2;
-        else if (lux < 800) result = 3;
-        else if (lux < 1200) result = 4;
-        else if (lux < 1500) result = 5;
-        else if (lux < 2000) result = 6;
-        else if (lux < 3000) result = 7;
-        else if (lux < 4000) result = 8;
-        else if (lux < 5000) result = 9;
+    public float getNormalizedLux(float lux) {
+        float result = 0;
+        if (lux < 1) result = 0.5f;//             dark
+        else if (lux < 5) result = 0.8f;
+        else if (lux < 10) result = 1.2f;
+        else if (lux < 20) result = 1.5f;
+        else if (lux < 30) result = 1.9f;
+        else if (lux < 50) result = 2.3f;
+        else if (lux < 80) result = 2.8f;
+        else if (lux < 150) result = 3f;
+        else if (lux < 220) result = 3.4f;
+        else if (lux < 300) result = 3.8f;
+        else if (lux < 350) result = 4f;
+        else if (lux < 450) result = 4.5f;
+        else if (lux < 550) result = 5f;
+        else if (lux < 750) result = 5.5f;
+        else if (lux < 950) result = 6;//      less bright
+        else if (lux < 1500) result = 7;
+        else if (lux < 2500) result = 8;
+        else if (lux < 4000) result = 9;
         else if (lux < 6000) result = 10;
         else if (lux < 8000) result = 11;
         else if (lux < 10000) result = 12;//    bright
-        else if (lux < 20000) result = 13;
-        else if (lux < 35000) result = 14;
+        else if (lux < 15000) result = 13;
+        else if (lux < 30000) result = 14;
         else if (lux < 50000) result = 15;
-        else if (lux < 65000) result = 16;//    very bright
+        else if (lux < 65000) result = 16;
         else if (lux < 80000) result = 17;
-        else result = 18;
+        else result = 18;//                     very bright
         return result;
     }
 
