@@ -34,6 +34,7 @@
     <string name="title_activity_wbattery">Battery</string>
     <string name="title_activity_wbluetooth">Bluetooth</string>
     <string name="title_activity_wnotifications">Notifications</string>
+    <string name="title_activity_wtempdebugger">Notifications</string>
     <string name="me">Me</string>
     <string name="custom_orange">#FFBF00</string>
     <string name="title_activity_textColor">#FFFFFF</string>

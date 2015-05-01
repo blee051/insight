@@ -12,6 +12,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.insight.insight.common.Setting;
+import com.insight.insight.common.TempDebugger;
 import com.insight.insight.core.DataAcquisitor;
 import com.insight.insight.data.JSONUtil;
 import com.insight.insight.data.SemanticTempCSVUtil;
@@ -39,6 +40,8 @@ public class LightSensor extends Service implements SensorEventListener {
     private DataAcquisitor mDataBuffer;
     private DataAcquisitor mSA_lightBuffer;
 
+    TempDebugger TempDebugger;
+
     public LightSensor() {
     }
 
@@ -49,6 +52,7 @@ public class LightSensor extends Service implements SensorEventListener {
 
     @Override
     public void onCreate() {
+        TempDebugger = new TempDebugger(this);
         count = 0;
         totalSum = 0f;
         mDataBuffer = new DataAcquisitor(this, Setting.dataFolderName_LightSensor);
@@ -60,44 +64,53 @@ public class LightSensor extends Service implements SensorEventListener {
         mHandler = new Handler(ht.getLooper());
         mHandler.post(activateLightListener);
         Log.d(LOG_TAG, "Light sensor started");
+        TempDebugger.Log("LightSensor", "Started");
     }
 
-     @Override
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_STICKY;
+    }
+
+    @Override
     public void onSensorChanged(SensorEvent event) {
         //Light sensor returns one value as LUX
         //taking 3 sample on every <SensorConstants.LIGHT_SENSOR_SAMPLE_INTERVAL> Milliseconds
         //and then calculate the average and insert to buffer
         //and sleep for <SensorConstants.LIGHT_SENSOR_INTERVAL> Milliseconds
+        try {
+            mSensorManager.unregisterListener(this);
+            float lux = event.values[0];
+            totalSum += lux;
+            count++;
+            Log.d(LOG_TAG, "Sample count:" + count + ", lux:" + lux + ", total:" + totalSum);
+            TempDebugger.Log("LightSensor", "Sampled " + count);
+            if (count >= Setting.LIGHT_SAMPLE_AMNT) {
+                Date date = new Date();
+                float avg = totalSum / count;
 
-        mSensorManager.unregisterListener(this);
-        float lux = event.values[0];
-        totalSum += lux;
-        count++;
-        Log.d(LOG_TAG, "Sample count:" + count + ", lux:" + lux + ", total:" + totalSum);
+                //Encode the lux value and date
+                String encoded = JSONUtil.encodeLight(avg, date);
+                Log.d(LOG_TAG, encoded);
 
-        if (count >= Setting.LIGHT_SAMPLE_AMNT) {
-            Date date = new Date();
-            float avg = totalSum / count;
+                //add encoded string to buffer
+                mDataBuffer.insert(encoded, true, Setting.bufferMaxSize);
+                mDataBuffer.flush(true);
 
-            //Encode the lux value and date
-            String encoded = JSONUtil.encodeLight(avg, date);
-            Log.d(LOG_TAG, encoded);
+                String encoded_SA = SemanticTempCSVUtil.encodeLight(avg, date);
+                mSA_lightBuffer.insert(encoded_SA, true, Setting.bufferMaxSize);
+                mSA_lightBuffer.flush(true);
+                totalSum = 0;
+                count = 0;
 
-            //add encoded string to buffer
-            mDataBuffer.insert(encoded, true, Setting.bufferMaxSize);
-            mDataBuffer.flush(true);
+                mHandler.postDelayed(activateLightListener, Setting.LIGHT_SENSOR_INTERVAL);
 
-            String encoded_SA = SemanticTempCSVUtil.encodeLight(avg, date);
-            mSA_lightBuffer.insert(encoded_SA, true, Setting.bufferMaxSize);
-            mSA_lightBuffer.flush(true);
-            totalSum = 0;
-            count = 0;
+            } else {
+                mHandler.postDelayed(activateLightListener, Setting.LIGHT_SENSOR_SAMPLE_INTERVAL);
 
-            mHandler.postDelayed(activateLightListener, Setting.LIGHT_SENSOR_INTERVAL);
-
-        } else {
-            mHandler.postDelayed(activateLightListener, Setting.LIGHT_SENSOR_SAMPLE_INTERVAL);
-
+            }
+        } catch (Exception e) {
+            TempDebugger.Log("LightSensor", "Sampling ERROR " + e.getMessage());
         }
     }
 
@@ -108,17 +121,29 @@ public class LightSensor extends Service implements SensorEventListener {
 
     @Override
     public void onDestroy() {
-        mDataBuffer.flush(true);
-        mSA_lightBuffer.flush(true);
-        mSensorManager.unregisterListener(this);
-        Log.d(LOG_TAG, "Light sensor stopped");
-        super.onDestroy();
+        try {
+            mDataBuffer.flush(true);
+            mSA_lightBuffer.flush(true);
+            mSensorManager.unregisterListener(this);
+            Log.d(LOG_TAG, "Light sensor stopped");
+            TempDebugger.Log("LightSensor", "Destroyed");
+            TempDebugger.Vibrate(1);
+            super.onDestroy();
+            startService(new Intent(this, this.getClass()));
+            TempDebugger.Log("LightSensor", "Trying to Start Service...");
+        } catch (Exception e) {
+            TempDebugger.Log("LightSensor", "Sampling ERROR " + e.getMessage());
+        }
     }
 
     private Runnable activateLightListener = new Runnable() {
         @Override
         public void run() {
-            mSensorManager.registerListener(LightSensor.this, mLight, SensorManager.SENSOR_DELAY_FASTEST);
+            try {
+                mSensorManager.registerListener(LightSensor.this, mLight, SensorManager.SENSOR_DELAY_FASTEST);
+            } catch (Exception e) {
+                TempDebugger.Log("LightSensor", "registerListener ERROR " + e.getMessage());
+            }
         }
     };
 }

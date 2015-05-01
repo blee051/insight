@@ -11,6 +11,7 @@ import com.insight.insight.ui.Bluetooth_Actv;
 import com.insight.insight.ui.HeartRate_Actv;
 import com.insight.insight.ui.MainListItem;
 import com.insight.insight.ui.Notifications_Actv;
+import com.insight.insight.ui.Temp_Actv;
 
 import java.util.ArrayList;
 
@@ -82,6 +83,13 @@ public class MenuItems {
                     R.drawable.ic_light, AmbientLight_Actv.class);
             systemItemList.add(ambLightItem);
         }
+
+        // Temp Debugger
+            MainListItem ambLightItem = new MainListItem(
+                    "Debugger",
+                    R.drawable.ic_debugger, Temp_Actv.class);
+            systemItemList.add(ambLightItem);
+
 
         return systemItemList;
     }

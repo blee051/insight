@@ -179,6 +179,38 @@ public class JSONUtil {
 
     }
 
+    public static String encodeTempDebuggerLog(Date timestamp, String strTag, String strLog) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("timestamp", Setting.timestampFormat.format(timestamp));
+            jsonObject.put("Tag", strTag);
+            jsonObject.put("Data", strLog);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /* Decode Methods*/
 
@@ -388,5 +420,23 @@ public class JSONUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public Object[] decodeTempDebuggerLog(String encoded) {
+        try {
+            JSONObject jObj = new JSONObject(encoded);
+            Date date = Setting.timestampFormat.parse(jObj.get("timestamp").toString());
+            String strTag = jObj.get("Tag").toString();
+            String strLog = jObj.get("Data").toString();
+            return new Object[]{date, strTag, strLog};
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+
     }
 }
