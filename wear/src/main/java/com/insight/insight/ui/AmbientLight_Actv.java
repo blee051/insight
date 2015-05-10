@@ -259,7 +259,7 @@ public class AmbientLight_Actv extends Activity {
         mRenderer.addXTextLabel(series1.getX(1), "12:00");
         mRenderer.addXTextLabel(series1.getX(2), "23:59");
 
-        mRenderer.setBarWidth(1.2f);
+        mRenderer.setBarWidth(2f);
         mRenderer.setXLabels(0);
         mRenderer.setXLabelsAlign(Paint.Align.CENTER);
         mRenderer.setMarginsColor(Color.argb(0x00, 0xff, 0x00, 0x00)); // transparent margins
@@ -290,30 +290,29 @@ public class AmbientLight_Actv extends Activity {
 
     public float getNormalizedLux(float lux) {
         float result = 0;
-        if (lux < 1) result = 0.5f;//             dark
-        else if (lux < 5) result = 0.8f;
+        if (lux < 5) result = 0.5f;//             dark
         else if (lux < 10) result = 1.2f;
-        else if (lux < 20) result = 1.5f;
-        else if (lux < 30) result = 1.9f;
-        else if (lux < 50) result = 2.3f;
-        else if (lux < 80) result = 2.8f;
-        else if (lux < 150) result = 3f;
-        else if (lux < 220) result = 3.4f;
-        else if (lux < 300) result = 3.8f;
-        else if (lux < 350) result = 4f;
-        else if (lux < 450) result = 4.5f;
-        else if (lux < 550) result = 5f;
-        else if (lux < 750) result = 5.5f;
-        else if (lux < 950) result = 6;//      less bright
-        else if (lux < 1500) result = 7;
-        else if (lux < 2500) result = 8;
-        else if (lux < 4000) result = 9;
-        else if (lux < 6000) result = 10;
-        else if (lux < 8000) result = 11;
-        else if (lux < 10000) result = 12;//    bright
-        else if (lux < 15000) result = 13;
-        else if (lux < 30000) result = 14;
-        else if (lux < 50000) result = 15;
+        else if (lux < 15) result = 1.5f;
+        else if (lux < 20) result = 1.9f;
+        else if (lux < 30) result = 2.3f;
+        else if (lux < 45) result = 2.8f;
+        else if (lux < 70) result = 3f;
+        else if (lux < 90) result = 3.4f;
+        else if (lux < 130) result = 3.8f;
+        else if (lux < 160) result = 4f;
+        else if (lux < 200) result = 4.5f;
+        else if (lux < 250) result = 5f;
+        else if (lux < 350) result = 5.5f;
+        else if (lux < 500) result = 6;//      less bright
+        else if (lux < 800) result = 7;
+        else if (lux < 1200) result = 8;
+        else if (lux < 2000) result = 9;
+        else if (lux < 4000) result = 10;
+        else if (lux < 600) result = 11;
+        else if (lux < 8000) result = 12;//    bright
+        else if (lux < 10000) result = 13;
+        else if (lux < 15000) result = 14;
+        else if (lux < 30000) result = 15;
         else if (lux < 65000) result = 16;
         else if (lux < 80000) result = 17;
         else result = 18;//                     very bright

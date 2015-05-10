@@ -14,7 +14,7 @@ public final class Setting {
     public static final String LOG_FOLDER = "insight";
     public static final String APP_FOLDER = "insight";
 
-    public static final int bufferMaxSize = 10; // default: 10
+    public static final int bufferMaxSize = 10;
 
     public static final int linksButtonCount = 7;
 
@@ -44,7 +44,7 @@ public final class Setting {
 
     public static long WALKDETECTION_INTERVAL = 30000L; //30 seconds
 
-    public static long LIGHT_SENSOR_INTERVAL = 600000L; // 10 minutes
+    public static long LIGHT_SENSOR_INTERVAL =600000L; // 10 minutes (1000 * 60 * 10)
     public static long LIGHT_SENSOR_SAMPLE_INTERVAL = 30000L; // 30 Seconds
     public static int LIGHT_SAMPLE_AMNT = 3;
 }

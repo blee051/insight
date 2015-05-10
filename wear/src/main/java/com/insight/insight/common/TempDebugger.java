@@ -21,15 +21,18 @@ public class TempDebugger {
 
     public void Log(String strTag, String strLog) {
         DataAcquisitor mDataBuffer = new DataAcquisitor(context, Setting.dataFolderName_Temp);
-        mDataBuffer.insert(JSONUtil.encodeTempDebuggerLog(new Date(), strTag, strLog), true, Setting.bufferMaxSize);
+        mDataBuffer.insert(JSONUtil.encodeTempDebuggerLog(new Date(), strTag, android.os.Process.myPid() + " " + strLog), true, Setting.bufferMaxSize);
         mDataBuffer.flush(true);
     }
-    public void Vibrate(int count){
+
+    public void Vibrate(int lng) {
         Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        long[] vibrationPattern = {0, 300, 100, 300};
+
+        // first delay, vibrate, sleep, vibrate, sleep... in milliseconds
+        long[] vibrationPattern = {0, lng * 100, lng * 500, lng * 100};
+
         //-1 - don't repeat
-        final int indexInPatternToRepeat = count;
-        vibrator.vibrate(vibrationPattern, indexInPatternToRepeat);
+        vibrator.vibrate(vibrationPattern, -1);
     }
 
 }

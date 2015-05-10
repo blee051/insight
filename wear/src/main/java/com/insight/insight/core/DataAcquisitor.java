@@ -13,41 +13,37 @@ public class DataAcquisitor {
     private Context context;
     private ArrayList<String> dataBuffer;
 
-    public DataAcquisitor (Context context, String folderName){
+    public DataAcquisitor(Context context, String folderName) {
         this.context = context;
         this.folderName = folderName;
         dataBuffer = new ArrayList<String>();
     }
 
-    public String getFolderName(){
+    public String getFolderName() {
         return folderName;
     }
-    public ArrayList<String> getDataBuffer(){
+
+    public ArrayList<String> getDataBuffer() {
         return dataBuffer;
     }
-    public Context getContext(){
+
+    public Context getContext() {
         return context;
     }
-    public void insert (String s, boolean append, int maxBuffSize){
+
+    public void insert(String s, boolean append, int maxBuffSize) {
         //Log.d(LOG_TAG, "Inserting into dBuff");
         dataBuffer.add(s);
-
-        if (dataBuffer.size() > maxBuffSize){
-            IOManager dataLogger = new IOManager();
-            dataLogger.logData(this,append);
-            getDataBuffer().clear();
-
+        if (dataBuffer.size() >= maxBuffSize) {
+            flush(append);
         }
     }
 
-    public void flush(boolean append){
+    public void flush(boolean append) {
         //Log.d(LOG_TAG, "Flushing buffer" + this.getFolderName());
         IOManager dataLogger = new IOManager();
-        dataLogger.logData(this,append);
+        dataLogger.logData(this, append);
         getDataBuffer().clear();
-
-
-
     }
 
 }

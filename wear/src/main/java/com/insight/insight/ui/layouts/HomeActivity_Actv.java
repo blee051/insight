@@ -17,12 +17,9 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.insight.insight.R;
-import com.insight.insight.alarm.AlarmReceiver;
-import com.insight.insight.sensors.BatterySensor;
-import com.insight.insight.sensors.LightSensor;
 import com.insight.insight.ui.MainListItem;
-import com.insight.insight.utils.FeatureCheck;
 import com.insight.insight.utils.MenuItems;
+import com.insight.insight.utils.ServicesMonitor;
 
 /**
  * Created by MN on 3/10/2015.
@@ -102,7 +99,8 @@ public class HomeActivity_Actv extends Activity {
                     break;
                 index += 1;
             }
-        startAllServices();
+
+        startService(new Intent(this, ServicesMonitor.class));
     }
 
 
@@ -115,15 +113,5 @@ public class HomeActivity_Actv extends Activity {
 
     private int getSizeInDP(int x) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, x, getResources().getDisplayMetrics());
-    }
-
-    //TODO Integrate this into autostart
-    private void startAllServices() {
-        startService(new Intent(this, BatterySensor.class));
-        AlarmReceiver alarmReceiver = new AlarmReceiver();
-        alarmReceiver.setMidnightAlarmManager(getApplicationContext());
-        if (FeatureCheck.hasLightFeature(this)) {
-            startService(new Intent(this, LightSensor.class));
-        }
     }
 }

@@ -5,9 +5,18 @@
 
     <uses-feature android:name="android.hardware.type.watch" />
 
+    <!-- Permission for access to Activity sensors -->
     <uses-permission android:name="android.permission.BODY_SENSORS" />
+
+    <!-- Permission for write to SD-Card -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <!-- Permission for access to device vibration -->
     <uses-permission android:name="android.permission.VIBRATE"/>
+
+    <!-- Permission for Starting services after restarting the device -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
 
     <application
         android:allowBackup="true"
@@ -59,11 +68,13 @@
             android:name="com.insight.insight.sensors.BatterySensor"
             android:enabled="true"
             android:exported="false" />
+
         <service android:name="com.insight.insight.sensors.NotificationSensor" >
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
             </intent-filter>
         </service>
+
         <service
             android:name="com.insight.insight.sensors.AppUsageSensor"
             android:enabled="true"
@@ -72,7 +83,8 @@
         <service
             android:name="com.insight.insight.sensors.LightSensor"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="false"/>
+
 
         <!--
         <service android:name=".sensors.NotificationReceiver">
@@ -82,9 +94,18 @@
         </service>
         -->
 
+        <!-- Schedule for sending Data to remote server -->
         <receiver
             android:name="com.insight.insight.alarm.AlarmReceiver"
             android:process=":remote" />
+
+        <!-- Broadcast receiver for BOOT_COMPLETED event -->
+        <receiver android:name=".utils.ServicesMonitor" android:enabled="true" android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
