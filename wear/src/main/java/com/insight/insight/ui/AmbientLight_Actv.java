@@ -259,7 +259,7 @@ public class AmbientLight_Actv extends Activity {
         mRenderer.addXTextLabel(series1.getX(1), "12:00");
         mRenderer.addXTextLabel(series1.getX(2), "23:59");
 
-        mRenderer.setBarWidth(2f);
+        mRenderer.setBarWidth(1.25f);
         mRenderer.setXLabels(0);
         mRenderer.setXLabelsAlign(Paint.Align.CENTER);
         mRenderer.setMarginsColor(Color.argb(0x00, 0xff, 0x00, 0x00)); // transparent margins
