@@ -5,6 +5,7 @@
     <color name="text_color">#000000</color>
     <color name="homescreen_bgcolor">#FFFFFF</color>
     <color name="chart_line_color">#FF6D00</color>
+    <color name="chart_fill_color">#FFECD0</color>
     <color name="chart_button_bgcolor">#f0f0f0</color>
     <color name="chart_labels_color">#505050</color>
     <color name="chart_grids_color">#f0f0f0</color>

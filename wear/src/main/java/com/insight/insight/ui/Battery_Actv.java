@@ -221,6 +221,9 @@ public class Battery_Actv extends Activity {
         XYSeriesRenderer renderer1 = new XYSeriesRenderer();
         renderer1.setLineWidth(getResources().getInteger(R.integer.chart_line_width));
         renderer1.setColor(getResources().getColor(R.color.chart_line_color));
+        XYSeriesRenderer.FillOutsideLine fill = new XYSeriesRenderer.FillOutsideLine(XYSeriesRenderer.FillOutsideLine.Type.BELOW);
+        fill.setColor(getResources().getColor(R.color.chart_fill_color));
+        renderer1.addFillOutsideLine(fill);
         //renderer1.setDisplayBoundingPoints(true);
         //renderer1.setPointStyle(PointStyle.CIRCLE);
         //renderer1.setPointStrokeWidth(2);
