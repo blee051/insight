@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.insight.insight.R;
 import com.insight.insight.utils.MenuItems;
-import com.insight.insight.utils.ServicesMonitor;
+import com.insight.insight.alarm.ServicesMonitor;
 
 /**
  * Created by MN on 3/10/2015.

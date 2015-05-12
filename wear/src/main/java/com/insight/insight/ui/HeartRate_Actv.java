@@ -68,6 +68,9 @@ public class HeartRate_Actv extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        new SyncTask().execute();
+
         setContentView(R.layout.fragment_chart);
         tvDate = (TextView) findViewById(R.id.tvDate);
         tvLastSync = (TextView) findViewById(R.id.tvLastSync);
@@ -97,13 +100,7 @@ public class HeartRate_Actv extends Activity {
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        new SyncTask().execute();
-    }
-
-    private void displayData(Date date) {
+     private void displayData(Date date) {
         tvDate.setText(new SimpleDateFormat("MM/dd/yyyy").format(date));
         tvLastSync.setHeight(0);
 
@@ -324,6 +321,7 @@ public class HeartRate_Actv extends Activity {
                         }
                     })
                     .addApi(Wearable.API).build();
+
             mGoogleAPIClient.blockingConnect(10, TimeUnit.SECONDS);
             WearableSendSync.sendSyncToDevice(mGoogleAPIClient, WearableSendSync.START_HIST_SYNC, new Date());
 

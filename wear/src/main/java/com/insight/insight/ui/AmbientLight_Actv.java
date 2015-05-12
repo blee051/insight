@@ -28,7 +28,6 @@ import com.insight.insight.utils.IOManager;
 
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
-import org.achartengine.chart.BarChart;
 import org.achartengine.model.TimeSeries;
 import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
@@ -203,23 +202,11 @@ public class AmbientLight_Actv extends Activity {
 //                        }
                     }
                 }
-
-                //for have all 24 hours on graph, we add two extra record with 0 value to records
-                //
-                //
-                //
                 Calendar cal = Calendar.getInstance();
-                cal.setTime(date);
-                cal.set(Calendar.HOUR_OF_DAY, 0);   // 00:00:00
-                series1.add(cal.getTime(), 0);
-                cal.add(Calendar.HOUR, 12);          // 12:00:00
-                series1.add(cal.getTime(), 0);
-                cal.add(Calendar.MILLISECOND, 43199999); // 23:59:59
-                series1.add(cal.getTime(), 0);
                 for (LightDataRecord record : dataRecords) {
-                    series1.add(record.timeStamp, getNormalizedLux(record.lux));
+                    cal.setTime(record.timeStamp);
+                    series1.add(Double.valueOf((cal.get(Calendar.HOUR_OF_DAY) * 60) + cal.get(Calendar.MINUTE)), getNormalizedLux(record.lux));
                 }
-
 
             } finally {
                 br.close();
@@ -244,24 +231,28 @@ public class AmbientLight_Actv extends Activity {
         // Finaly we create the multiple series renderer to control the graph
         XYMultipleSeriesRenderer mRenderer = new XYMultipleSeriesRenderer();
         mRenderer.addSeriesRenderer(renderer1);
+
         mRenderer.setYAxisMin(0);
         mRenderer.setYAxisMax(19);
         mRenderer.setYLabelsAlign(Paint.Align.RIGHT);
         mRenderer.setYLabelsPadding(5.0f);
         mRenderer.setYLabels(0);
 
-        mRenderer.addYTextLabel(0, "Dark");
+        mRenderer.addYTextLabel(1, "Dark");
         mRenderer.addYTextLabel(5, "Less\nbright");
         mRenderer.addYTextLabel(11, "Bright");
         mRenderer.addYTextLabel(17, "Very\nbright");
 
-        mRenderer.addXTextLabel(series1.getX(0), "00:00");
-        mRenderer.addXTextLabel(series1.getX(1), "12:00");
-        mRenderer.addXTextLabel(series1.getX(2), "23:59");
+        mRenderer.setXAxisMin(0);
+        mRenderer.setXAxisMax(1439);
+        mRenderer.setXLabelsAlign(Paint.Align.CENTER);
+        mRenderer.setXLabels(0);
+
+        mRenderer.addXTextLabel(0, "00:00");
+        mRenderer.addXTextLabel(720, "12:00");
+        mRenderer.addXTextLabel(1439, "23:59");
 
         mRenderer.setBarWidth(1.25f);
-        mRenderer.setXLabels(0);
-        mRenderer.setXLabelsAlign(Paint.Align.CENTER);
         mRenderer.setMarginsColor(Color.argb(0x00, 0xff, 0x00, 0x00)); // transparent margins
         // Disable Pan on two axis
         mRenderer.setPanEnabled(false, false);
@@ -280,7 +271,7 @@ public class AmbientLight_Actv extends Activity {
         mRenderer.setShowTickMarks(false);
         //mRenderer.setChartTitle(new SimpleDateFormat("MM/dd/yyyy").format(date));
 
-        GraphicalView chartView = ChartFactory.getBarChartView(this, dataset, mRenderer, BarChart.Type.STACKED);//
+        GraphicalView chartView = ChartFactory.getLineChartView(this, dataset, mRenderer);
         return chartView;
     }
 
