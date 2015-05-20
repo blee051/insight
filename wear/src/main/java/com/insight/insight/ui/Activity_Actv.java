@@ -194,7 +194,7 @@ public class Activity_Actv extends Activity {
 
             }
             chart.setLayoutParams(cParams);
-            chart.setPadding(10, -2, 0, -3); // setPadding(left, top, right, bottom)
+            chart.setPadding(10, 0, 0, 0); // setPadding(left, top, right, bottom)
             chart.addView(createGraph(dataMapList.get(activityType), activityType, showFooter));
             frameBox.addView(chart, i + 1);
             i += 1;
@@ -267,13 +267,13 @@ public class Activity_Actv extends Activity {
         Log.i("Activity " + title, "In Create Chart");
         XYSeries series1 = new XYSeries("Activity " + title);
 
-        // filling the series with random values for Y:0 to X:0-24
+        // add a small value(5) to all values to visualize a horizontal line
         for (int i = 0; i <= 23; i++) {
-            series1.add(i, 2);
+            series1.add(i, 5);
         }
 
         for (ActivityDataRecord record : dataRecords) {
-            series1.add(record.startTimeHour, record.duration);
+            series1.add(record.startTimeHour, record.duration + 5);
             //Log.d(">>", "act:" + record.activityType + ",ts:" + record.startTime.toString() + ", tsh:" + record.startTimeHour + ", sumdur:" + record.duration + ", dns:" + record.density);
         }
 
