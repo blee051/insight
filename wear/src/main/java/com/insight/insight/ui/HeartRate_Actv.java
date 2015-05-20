@@ -266,6 +266,7 @@ public class HeartRate_Actv extends Activity {
         mRenderer.setXLabels(0);
 
         mRenderer.setYAxisMin(0);
+        mRenderer.setYAxisMax(220);
         mRenderer.setYLabelsAlign(Paint.Align.CENTER);
         mRenderer.setYLabelsPadding(5.0f);
 
