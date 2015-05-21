@@ -1,8 +1,11 @@
 package com.insight.insight.ui;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.text.SpannableString;
 import android.text.style.BackgroundColorSpan;
@@ -23,6 +26,11 @@ public class MyActivity2 extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mobile_main_activity2);
+
+        //Hiding actionBar
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
 
         Button gps_btn = (Button) findViewById(R.id.gps_btn);
         Button notif_btn = (Button) findViewById(R.id.notif_btn);
@@ -74,4 +82,37 @@ public class MyActivity2 extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    //"Help" Dialog window (popup)
+    public void  showHelpDialog(View view){
+        AlertDialog.Builder termAlert = new AlertDialog.Builder(this);
+        termAlert.setMessage(MyActivity2.this.getString(R.string.help_MSG))
+
+                .setPositiveButton("Continue...", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which){
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+        termAlert.show();
+
+    }
+
+    //"About" Dialog window (popup)
+    public void  showAboutDialog(View view){
+        AlertDialog.Builder termAlert = new AlertDialog.Builder(this);
+        termAlert.setMessage(MyActivity2.this.getString(R.string.about_MSG))
+
+                .setPositiveButton("Continue...", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which){
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+        termAlert.show();
+
+    }
+
 }
