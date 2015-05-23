@@ -49,12 +49,19 @@ public class MyActivity2 extends ActionBarActivity {
             }
         });
 
+        //notif_btn.setOnClickListener(new View.OnClickListener() {
+           // @Override
+            //public void onClick(View view) {
+                //startActivity(new Intent(MyActivity2.this, NotificationActivity.class));
+
         notif_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MyActivity2.this, NotificationActivity.class));
+                startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
+
             }
         });
+
 
 
 
