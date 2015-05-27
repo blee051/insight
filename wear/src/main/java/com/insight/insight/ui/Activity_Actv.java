@@ -85,15 +85,16 @@ public class Activity_Actv extends Activity {
         lastDataFilesList = ioManager.getLastFilesInDir(Setting.dataFolderName_ActivFit, Setting.linksButtonCount);
         //lastDataFilesList = new File[]{new File("sdcard/2-9-2015.txt"), new File("sdcard/2-8-2015.txt")}; // reading from temp file
         if (lastDataFilesList != null && lastDataFilesList.length > 0) {
-            Date date = ioManager.parseDataFilename2Date(lastDataFilesList[0].getName());//
+            String filename = lastDataFilesList[0].getName();
+            Date date = ioManager.parseDataFilename2Date(filename);//
             displayData(date);
         } else {
-            showNoData();
+            showNoData(new Date());
         }
     }
 
-    private void showNoData() {
-        tvDate.setText(new SimpleDateFormat("MM/dd/yyyy").format(new Date()));
+    private void showNoData(Date date) {
+        tvDate.setText(new SimpleDateFormat("MM/dd/yyyy").format(date));
         tvLastSync.setText("\n" + getResources().getString(R.string.message_nodata) + "\n");
         tvLastSync.setTextSize(getResources().getDimension(R.dimen.textsize_m1));
         linksCursor.setVisibility(View.INVISIBLE);
@@ -106,11 +107,11 @@ public class Activity_Actv extends Activity {
 
     }
 
-    private HashMap<String, ArrayList<ActivityDataRecord>> fetchData(Date date) {
+    private HashMap<String, ArrayList<ActivityDataRecord>> fetchData(String filename) {
         HashMap<String, ArrayList<ActivityDataRecord>> dataMapList = new HashMap<>();
         try {
             String sCurrentLine;
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(ioManager.getDataFolderFullPath(Setting.dataFolderName_ActivFit) + Setting.filenameFormat.format(date) + ".txt")));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
             try {
                 while ((sCurrentLine = br.readLine()) != null) {
                     Object[] decodedRow = jsonUtil.decodeActivityFit(sCurrentLine);// [0]:startTime, [1]:endTime, [2]:activityType, [3]:duration
@@ -159,11 +160,13 @@ public class Activity_Actv extends Activity {
 
     private void displayData(Date date) {
         tvDate.setText(new SimpleDateFormat("MM/dd/yyyy").format(date));
-        tvLastSync.setText("Last Sync: " + new SimpleDateFormat("MM/dd/yyyy hh:mm").format(date));
+        String dataFilename = ioManager.getDataFolderFullPath(Setting.dataFolderName_ActivFit) + Setting.filenameFormat.format(date) + ".txt";
+        tvLastSync.setTextSize(getResources().getDimension(R.dimen.textsize_s1));
+        tvLastSync.setText("Last Sync: " + new SimpleDateFormat("MM/dd/yyyy hh:mm").format(ioManager.getDataFileLastModifiedDate(dataFilename)));
 
-        HashMap<String, ArrayList<ActivityDataRecord>> dataMapList = fetchData(date);
+        HashMap<String, ArrayList<ActivityDataRecord>> dataMapList = fetchData(dataFilename);
         if (dataMapList.size() <= 0)
-            showNoData();
+            showNoData(date);
 
         // remove all added views before except linksbox and tvLastSync label
         frameBox.removeViewsInLayout(1, frameBox.getChildCount() - 2);
