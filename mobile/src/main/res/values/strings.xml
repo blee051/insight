@@ -28,5 +28,6 @@
     <string name="About"> About </string>
     <string name="terms_MSG">Terms and Conditions:\nTerm 1 \nTerm 2 \nTerm 3 \n.........................................."" </string>
     <string name="Continue">Continue... </string>
-
+    <string name="help_MSG">-</string>
+    <string name="about_MSG">-</string>
 </resources>

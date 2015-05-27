@@ -16,26 +16,25 @@ public class NotificationParcel implements Parcelable {
     public String category;
     public String PACKAGE_NAME;
     public Long POST_TIME;
+    public String PACKAGE_GENER;
 
 
-
-    public NotificationParcel(StatusBarNotification sbn){
+    public NotificationParcel(StatusBarNotification sbn) {
         Notification n = sbn.getNotification();
 
         this.EXTRA_TITLE = n.extras.getCharSequence(Notification.EXTRA_TITLE).toString();
-        if (n.extras.getCharSequence(Notification.EXTRA_TEXT) == null){
+        if (n.extras.getCharSequence(Notification.EXTRA_TEXT) == null) {
             this.EXTRA_TEXT = "";
-        }
-        else{
+        } else {
             this.EXTRA_TEXT = n.extras.getCharSequence(Notification.EXTRA_TEXT).toString();
         }
 
         this.flags = n.flags;
         /*Category was added in API Level 21 */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             this.category = n.category;
 
-        }else{
+        } else {
             this.category = "NA";
         }
 
@@ -43,6 +42,7 @@ public class NotificationParcel implements Parcelable {
         this.POST_TIME = sbn.getPostTime();
 
     }
+
     @Override
     public int describeContents() {
         return 0;
@@ -60,14 +60,13 @@ public class NotificationParcel implements Parcelable {
 
     }
 
-    public NotificationParcel (Parcel in){
+    public NotificationParcel(Parcel in) {
         this.EXTRA_TITLE = in.readString();
         this.EXTRA_TEXT = in.readString();
         this.flags = in.readInt();
         this.category = in.readString();
         this.PACKAGE_NAME = in.readString();
         this.POST_TIME = in.readLong();
-
     }
 
     public static final Creator<NotificationParcel> CREATOR = new Creator<NotificationParcel>() {

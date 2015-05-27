@@ -30,7 +30,7 @@ import java.util.Date;
 
 /* This class receives sync requests from the handheld
 
- */
+*/
 public class WearableListenerService extends com.google.android.gms.wearable.WearableListenerService {
     private final String TAG = this.getClass().getSimpleName();
     private static GoogleApiClient mGoogleApiClient;
@@ -38,14 +38,17 @@ public class WearableListenerService extends com.google.android.gms.wearable.Wea
     private static final String ACTV_SYNC_KEY = "/start/ActvSync";
     private static final String NOTIF_FILE_KEY = "/get/notifFile";
 
+
     @Override
     public void onDataChanged(DataEventBuffer events) {
-        Log.d (TAG, "On data Changed");
+        Log.d(TAG, "On data Changed");
         for (DataEvent event : events) {
             if (event.getType() == DataEvent.TYPE_CHANGED) {
                 DataItem item = event.getDataItem();
 
-                if (item.getUri().getPath().compareTo(HEART_SYNC_KEY) == 0){
+                //Log.d(TAG, "M Item Uri: " + item.getUri().getPath());
+
+                if (item.getUri().getPath().compareTo(HEART_SYNC_KEY) == 0) {
                     Log.d(TAG, "HEART SYNC REQ");
                     DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
                     Date date = new Date(dataMap.getLong("time"));
@@ -54,8 +57,8 @@ public class WearableListenerService extends com.google.android.gms.wearable.Wea
                     fetchHeartDataSet(this, date);
 
                 }
-                if (item.getUri().getPath().compareTo(ACTV_SYNC_KEY) == 0){
-                    Log.d(TAG,"ACTIVITY SYNC REQ");
+                if (item.getUri().getPath().compareTo(ACTV_SYNC_KEY) == 0) {
+                    Log.d(TAG, "ACTIVITY SYNC REQ");
                     DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
                     Date date = new Date(dataMap.getLong("time"));
                     buildGoogleAPIClient();
@@ -64,16 +67,15 @@ public class WearableListenerService extends com.google.android.gms.wearable.Wea
                     Handler actvHandler = buildActivityHandler();
                     actvHandler.post(new ActivitySensor.ActivityInformationRunnable(mGoogleApiClient, this, date));
                 }
-                if (item.getUri().getPath().compareTo(NOTIF_FILE_KEY) == 0){
+                if (item.getUri().getPath().compareTo(NOTIF_FILE_KEY) == 0) {
                     Log.d(TAG, "NOTIF FILE");
 
-                    synchronized (this){
+                    synchronized (this) {
                         DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
                         handleNotifFile(dataMap); // Creates file with SA completed and mapped
                         WearableDataLayer.sendSACompleteToWear(this, mGoogleApiClient, getFileName(dataMap));
                         cleanUpFiles(this);
                     }
-
 
 
                 }
@@ -146,32 +148,34 @@ public class WearableListenerService extends com.google.android.gms.wearable.Wea
     }
 
     /* tmp.txt will be overwritten with each time */
-    private void handleNotifFile(DataMap dataMap){
+    private void handleNotifFile(DataMap dataMap) {
         byte[] bytes = dataMap.getByteArray("NOTIF_FILE");
-        File dirs = new File (this.getFilesDir() + "/notif");
+        File dirs = new File(this.getFilesDir() + "/notif");
         dirs.mkdirs();
         File tmp = new File(dirs, "tmp.txt");
 
-            try {
-                FileOutputStream fos = new FileOutputStream(tmp);
-                fos.write(bytes);
-                fos.close();
+        try {
+            FileOutputStream fos = new FileOutputStream(tmp);
+            fos.write(bytes);
+            fos.close();
 
-                NotifLookupUtil.handleNotifLookup(this, tmp.getAbsolutePath());
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            NotifLookupUtil.handleNotifLookup(this, tmp.getAbsolutePath());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
-    private String getFileName(DataMap dataMap){
+
+    private String getFileName(DataMap dataMap) {
         String fileName = dataMap.getString("filename");
         return fileName;
     }
 
-    private void cleanUpFiles(Context context){
-        File saCompleteNotifFile = new File (context.getFilesDir() + NotifLookupUtil.sa_completeDir + "/" + NotifLookupUtil.completeFileName);
+    private void cleanUpFiles(Context context) {
+        // File: /data/data/com.insight.insight/files/SAComplete/TMP_SACompleted.txt
+        File saCompleteNotifFile = new File(context.getFilesDir() + NotifLookupUtil.sa_completeDir + "/" + NotifLookupUtil.completeFileName);
         saCompleteNotifFile.delete();
 
     }

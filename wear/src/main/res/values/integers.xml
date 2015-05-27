@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="action_text_faded_alpha">40</integer>
-    <integer name="chart_line_width">5</integer>
+    <integer name="chart_line_width">3</integer>
 </resources>

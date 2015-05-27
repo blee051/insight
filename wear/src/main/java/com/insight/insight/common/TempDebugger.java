@@ -7,7 +7,7 @@ package com.insight.insight.common;
 import android.content.Context;
 import android.os.Vibrator;
 
-import com.insight.insight.core.DataAcquisitor;
+import com.insight.insight.data.DataAcquisitor;
 import com.insight.insight.data.JSONUtil;
 
 import java.util.Date;

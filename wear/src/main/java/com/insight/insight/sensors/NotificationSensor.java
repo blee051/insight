@@ -23,7 +23,7 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 import com.insight.insight.common.Setting;
-import com.insight.insight.core.DataAcquisitor;
+import com.insight.insight.data.DataAcquisitor;
 import com.insight.insight.data.JSONUtil;
 import com.insight.insight.data.SemanticTempCSVUtil;
 import com.insight.insight.utils.NotificationParcel;
@@ -170,6 +170,9 @@ public class NotificationSensor extends WearableListenerService {
             if (event.getType() == DataEvent.TYPE_CHANGED) {
                 //Data item changed
                 DataItem item = event.getDataItem();
+
+                //Log.d(TAG, "W Item Uri: " + item.getUri().getPath());
+
                 if (item.getUri().getPath().compareTo("/notif") == 0) {
                     DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
                     final byte[] bytes = dataMap.getByteArray(NOTIF_KEY);
@@ -186,7 +189,6 @@ public class NotificationSensor extends WearableListenerService {
                         return;
                     }
 
-
                     lastExtraText = np.EXTRA_TEXT;
                     lastPackageName = np.PACKAGE_NAME;
                     lastTitle = np.EXTRA_TITLE;
@@ -194,12 +196,12 @@ public class NotificationSensor extends WearableListenerService {
 
                     Log.d(TAG, encoded);
                     mNotifBuffer.insert(encoded, true, Setting.bufferMaxSize);
-                    mNotifBuffer.flush(true);
+                    //mNotifBuffer.flush(true);
 
                     //tempGran
                     String encoded_SA = SemanticTempCSVUtil.encodeNotification(np);
                     mSA_NotifBuffer.insert(encoded_SA, true, Setting.bufferMaxSize);
-                    mSA_NotifBuffer.flush(true);
+                    //mSA_NotifBuffer.flush(true);
 
 
                 }
@@ -212,7 +214,6 @@ public class NotificationSensor extends WearableListenerService {
                     writeHeartRateValues(encodedDataSet);
 
                     writeSA_Heart_DataSet(dataSet);
-
 
                 }
                 if (item.getUri().getPath().compareTo("/actv") == 0) {
@@ -529,6 +530,7 @@ public class NotificationSensor extends WearableListenerService {
 
     /**
      * Takes in the genre modified file. It will then overWrite the day's notif file on the watch
+     *
      * @param dataMap
      */
     private void overWritePreviousSAFile(DataMap dataMap) {

@@ -10,7 +10,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.insight.insight.common.Setting;
-import com.insight.insight.core.DataAcquisitor;
+import com.insight.insight.data.DataAcquisitor;
 import com.insight.insight.data.JSONUtil;
 import com.insight.insight.data.SemanticTempCSVUtil;
 
@@ -78,17 +78,17 @@ public class BatterySensor extends Service {
                 boolean isCharging = (status == BatteryManager.BATTERY_STATUS_CHARGING) ||
                         (status == BatteryManager.BATTERY_STATUS_FULL);
 
-                if (level % 5 == 0) {
+                if (level % 2 == 0) {
                     //store in buff
                     Log.d(TAG, "Level:" + level);
                     Log.d(TAG, "Charging:" + isCharging);
                     String encoded = JSONUtil.encodeBattery(level, isCharging, new Date());
                     mDataBuffer.insert(encoded, true, Setting.bufferMaxSize);
-                    mDataBuffer.flush(true);
+                    //mDataBuffer.flush(true);
 
                     String encoded_SA = SemanticTempCSVUtil.encodeBattery(level, isCharging, new Date());
                     mSA_batteryBuffer.insert(encoded_SA, true, Setting.bufferMaxSize);
-                    mSA_batteryBuffer.flush(true);
+                    //mSA_batteryBuffer.flush(true);
                 }
 
             }

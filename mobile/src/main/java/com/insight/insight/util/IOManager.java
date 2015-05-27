@@ -1,9 +1,4 @@
-package com.insight.insight.utils;
-
-import android.os.Environment;
-
-import com.insight.insight.common.Setting;
-import com.insight.insight.data.DataAcquisitor;
+package com.insight.insight.util;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,50 +6,17 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Date;
 
 /* Created by CM & MN */
 public class IOManager {
 
     public static final String LOG_TAG = IOManager.class.getSimpleName();
-
-    public void logData(DataAcquisitor dataAcq, boolean append) {
-
-        if (dataAcq.getDataBuffer().size() <= 0) {
-            return;
-        }
-        File dirs = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
-                + "/insight/" + dataAcq.getFolderName());
-        dirs.mkdirs();
-
-        File logFile = new File(dirs, Setting.filenameFormat.format(new Date()) + ".txt");
-
-        try {
-            FileWriter writer = new FileWriter(logFile, append);
-
-            for (String s : dataAcq.getDataBuffer()) {
-                writer.append(s + System.getProperty("line.separator"));
-
-            }
-            writer.flush();
-            writer.close();
-            //Log.d(LOG_TAG, "Finished writing to file");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-    }
-
-
     public ArrayList<String> getFiles(String path) {
         ArrayList<String> lst = new ArrayList<>();
         File dirs = new File(path);
@@ -68,16 +30,12 @@ public class IOManager {
         return lst;
     }
 
-    public String getDataFolderFullPath(String dataFolderName) {
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + Setting.APP_FOLDER + "/" + dataFolderName + "/";
-    }
-
-    /**
-     * @param folder Folder name e.g. 'BatterySensor', 'Bluetooth', 'Notif', 'HeartRate'
+     /**
+     * @param folderPath Folder name e.g. 'BatterySensor', 'Bluetooth', 'Notif', 'HeartRate'
      * @param count  Maximum count of files to return
      * @return Limited amount of *.txt files ordered by lastModified date
      */
-    public File[] getLastFilesInDir(String folder, int count) {
+    public File[] getLastFilesInDir(String folderPath, int count) {
         // filter files to return just txt files and not empty
         FilenameFilter myFilter = new FilenameFilter() {
             public boolean accept(File dir, String name) {
@@ -93,7 +51,7 @@ public class IOManager {
             }
         };
 
-        File dir = new File(getDataFolderFullPath(folder));
+        File dir = new File(folderPath);
         File[] files = dir.listFiles(myFilter);
         if (files != null) {
             // sort files list on lastModified date
@@ -157,20 +115,7 @@ public class IOManager {
         return sContent;
     }
 
-    public Date parseDataFilename2Date(String dataFilename) {
-        String fileDate = dataFilename.toLowerCase().replace(".txt", ""); // remove .txt postfix from filename
-        try {
-            return Setting.filenameFormat.parse(fileDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
-    public Date getDataFileLastModifiedDate(String dataFilename) {
-        File file = new File(dataFilename);
-        return new Date(file.lastModified());
-    }
 
     public byte[] convertFileToBytes(File file) {
         byte[] bytes = new byte[(int) file.length()];
@@ -219,23 +164,5 @@ public class IOManager {
             }
         }
     }
-
-
-	/*public void logError(String msg) {
-        PrintWriter printWr;
-		Date a = new Date (System.currentTimeMillis());
-		String errorDate = a.getDate()+"-"+a.getMonth()+"-"+a.getYear();
-		File errorFile = new File(Setting.Instance(null).getLogFolder(), "error_"+errorDate+".txt");
-		try {
-			printWr = new PrintWriter(new FileWriter(errorFile, true));
-			printWr.append(msg + System.getProperty("line.separator"));
-			printWr.flush();
-			printWr.close();
-			printWr = null;
-		} catch (Exception ex) {
-			Log.e("IOManager.logError", ex.getMessage(), ex);
-		}
-	}
-    */
 
 }

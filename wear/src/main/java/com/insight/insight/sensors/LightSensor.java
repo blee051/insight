@@ -11,7 +11,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.insight.insight.common.Setting;
-import com.insight.insight.core.DataAcquisitor;
+import com.insight.insight.data.DataAcquisitor;
 import com.insight.insight.data.JSONUtil;
 import com.insight.insight.data.SemanticTempCSVUtil;
 
@@ -53,14 +53,13 @@ public class LightSensor extends Service implements SensorEventListener {
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mLight = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         Log.d(LOG_TAG, "Light sensor started");
-        Log.d(LOG_TAG, "Light sensor started");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         //SensorDelayNormal is 200,000 ms
         mSensorManager.registerListener(LightSensor.this, mLight, SensorManager.SENSOR_DELAY_FASTEST);
-        return START_NOT_STICKY;
+        return START_NOT_STICKY; // If process died, it will <<NOT>> start again
     }
 
     @Override
@@ -88,10 +87,10 @@ public class LightSensor extends Service implements SensorEventListener {
                 Log.d(LOG_TAG, encoded);
 
                 //add encoded string to buffer
-                mDataBuffer.insert(encoded, true, 1); // 1 for BufferMaxSize causes to flush Buffer automatically after inserting value
+                mDataBuffer.insert(encoded, true, Setting.bufferMaxSize); // 1 for BufferMaxSize causes to flush Buffer automatically after inserting value
 
                 String encoded_SA = SemanticTempCSVUtil.encodeLight(avg, date);
-                mSA_lightBuffer.insert(encoded_SA, true, 1); // 1 for BufferMaxSize causes to flush Buffer automatically after inserting value
+                mSA_lightBuffer.insert(encoded_SA, true, Setting.bufferMaxSize); // 1 for BufferMaxSize causes to flush Buffer automatically after inserting value
 
                 totalSum = 0;
                 count = 0;
@@ -122,6 +121,7 @@ public class LightSensor extends Service implements SensorEventListener {
 
     @Override
     public void onDestroy() {
+        mDataBuffer.flush(true);
         //Unregister the listener
         mSensorManager.unregisterListener(this);
         Log.d(LOG_TAG, "Light sensor stopped");

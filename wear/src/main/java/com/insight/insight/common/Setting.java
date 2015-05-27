@@ -14,9 +14,9 @@ public final class Setting {
     public static final String LOG_FOLDER = "insight";
     public static final String APP_FOLDER = "insight";
 
-    public static final int bufferMaxSize = 10;
+    public static final int bufferMaxSize = 1;
 
-    public static final int linksButtonCount = 7;
+    public static final int linksButtonCount = 10;
 
     public static final String dataFolderName_Battery = "BatterySensor";
     public static final String dataFolderName_Bluetooth = "Bluetooth";

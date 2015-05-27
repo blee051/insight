@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.insight.insight.common.Setting;
-import com.insight.insight.core.DataAcquisitor;
+import com.insight.insight.data.DataAcquisitor;
 import com.insight.insight.data.SemanticTempCSVUtil;
 import com.insight.insight.data.JSONUtil;
 
